@@ -24,7 +24,7 @@ stationary\
 
 The autoregressive (AR) component models the dependence of the current value on the past values of the series. The moving average (MA) component models the dependence of the current value on the past error terms. The "integrated" (I) component refers to the differencing applied to the series to achieve stationarity.
 
-[**Time Series Forecasting for Stock Prediction in Python**\ *This project introduces common techniques to manipulate time series and make predictions using an example of a stock...*python.plainenglish.io](https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb "https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb")[](https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb)
+[Time Series Forecasting for Stock Prediction in Python *This project introduces common techniques to manipulate time series and make predictions using an example of a stock...*python.plainenglish.io](https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb "https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb")[](https://python.plainenglish.io/time-series-forecasting-for-stock-prediction-in-python-710a88b7ccbb)
 #### Moving Averages
 One of the key components of the ARIMA model is the moving average (MA) term. The moving average model assumes that the current value of the time series is a linear function of the current and past error terms. The general form of the MA(q) model is:
 
