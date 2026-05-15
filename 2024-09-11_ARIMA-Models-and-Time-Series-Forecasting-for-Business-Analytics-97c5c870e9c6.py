@@ -5,7 +5,6 @@
 
 from data_io import read_csv
 from statsmodels.tsa.arima_model import ARIMA
-import pandas as pd
 
 data = read_csv('sales_data.csv', index_col='date')
 # Fit the ARIMA(1,1,1) model
