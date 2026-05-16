@@ -6,8 +6,6 @@ method of time series forecasting. In this article, we look at...
 Autoregressive integrated moving average (ARIMA) models are a common method of time series forecasting. In this article, we look at examples of implementing ARIMA models in Python.
 
 
-<figcaption>Photo by <a class="markup--anchor markup--figure-anchor" rel="photo-creator noopener" target="_blank">Ray Hennessy</a> on <a class="markup--anchor markup--figure-anchor"
-
 
 #### Understanding ARIMA Models
 One of the most widely used and powerful time series modeling techniques is the autoregressive integrated moving average (ARIMA) model. ARIMA models are a class of linear models that can capture a wide range of time series patterns, including trend, seasonality, and autocorrelation.
