@@ -5,14 +5,12 @@ Magics and shell lines are commented out. Run with a normal Python interpreter."
 
 # --- code cell ---
 
-import warnings
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-warnings.filterwarnings("ignore")
 
 # Statistical tests
 import statsmodels.api as sm

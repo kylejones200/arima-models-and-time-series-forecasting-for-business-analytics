@@ -12,13 +12,11 @@ Magics and shell lines are commented out. Run with a normal Python interpreter."
 # --- code cell ---
 
 # Core imports
-import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-warnings.filterwarnings("ignore")
 
 # Greykite imports
 from greykite.framework.templates.autogen.forecast_config import (
@@ -469,7 +467,7 @@ try:
     backtest = result_advanced.backtest
     print("\nBacktest results available")
     print(backtest.test_evaluation)
-except:
+except Exception:
     print("\nBacktest not performed (use evaluation_period_param to enable)")
 
 # Get trained model
