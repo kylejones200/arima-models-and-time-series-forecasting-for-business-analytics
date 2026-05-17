@@ -14,7 +14,7 @@ def main():
     # Load and clean data
 
     df = pd.read_csv(
-        "/Users/kylejonespatricia/Downloads/NMC_Documentation-6.0/NMC-60-abridged/NMC-60-abridged.csv"
+        "data/NMC_Documentation-6.0/NMC-60-abridged/NMC-60-abridged.csv"
     )
     df = df[["milex", "irst", "pec"]].dropna()
     # Define dependent and independent variables
@@ -124,7 +124,7 @@ def main():
 
     # Filter dataset for only the USA
     df = pd.read_csv(
-        "/Users/kylejonespatricia/Downloads/NMC_Documentation-6.0/NMC-60-abridged/NMC-60-abridged.csv"
+        "data/NMC_Documentation-6.0/NMC-60-abridged/NMC-60-abridged.csv"
     )
     df_usa = df[df["stateabb"] == "USA"].copy()
 
