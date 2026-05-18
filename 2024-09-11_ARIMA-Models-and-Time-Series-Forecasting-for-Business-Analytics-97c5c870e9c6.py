@@ -1,6 +1,5 @@
 # Description: Short example for ARIMA Models and Time Series Forecasting for Business Analytics.
 
-
 # Load the time series data
 
 from data_io import read_csv
@@ -13,7 +12,7 @@ def main():
     model = ARIMA(data, order=(1, 1, 1))
     model_fit = model.fit()
     # Make forecasts
-    forecast = model_fit.forecast(steps=10)[0]
+    model_fit.forecast(steps=10)[0]
 
 
 if __name__ == "__main__":

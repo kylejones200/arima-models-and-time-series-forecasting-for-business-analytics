@@ -122,7 +122,6 @@ def evaluate_forecast(forecast_df):
 def load_data(source="uk_marriages"):
     """
     Load time series data from various sources.
-
     Parameters:
     -----------
     source : str
@@ -225,12 +224,10 @@ def plot_forecast(forecast_df, n_historical=100, title="Greykite Forecast"):
 def simple_forecast(df, horizon=12):
     """
     Run a simple Greykite forecast with default settings.
-
     Parameters:
     -----------
     df : DataFrame with 'ts' and 'y' columns
     horizon : int, forecast horizon
-
     Returns:
     --------
     result : Forecast result object
@@ -254,63 +251,40 @@ def simple_forecast(df, horizon=12):
 
 def core_imports() -> None:
     warnings.filterwarnings("ignore")
-
     plt.style.use("seaborn-v0_8-darkgrid")
-
     print("✓ Greykite libraries loaded successfully")
 
 
 def try_to_load_uk_marriage_data() -> None:
     df = load_data("uk_marriages")
-
     print("\nData structure:")
-
     print(df.head())
-
     print(f"\nColumns: {list(df.columns)}")
-
     print(f"Data types:\n{df.dtypes}")
 
 
 def visualize_the_data() -> None:
     fig, axes = plt.subplots(2, 1, figsize=(15, 8))
-
     axes[0].plot(df["ts"], df["y"], linewidth=1)
-
     axes[0].set_title("Target Variable Over Time", fontsize=14, fontweight="bold")
-
     axes[0].set_xlabel("Date")
-
     axes[0].set_ylabel("Value")
-
     axes[0].grid(False)
-
     axes[1].hist(df["y"], bins=50, edgecolor="black", alpha=0.7)
-
     axes[1].set_title("Distribution of Target Variable", fontsize=14, fontweight="bold")
-
     axes[1].set_xlabel("Value")
-
     axes[1].set_ylabel("Frequency")
-
     axes[1].grid(False)
-
     plt.tight_layout()
-
     plt.show()
-
     print("\nSummary Statistics:")
-
     print(df["y"].describe())
 
 
 def create_forecaster() -> None:
     result = simple_forecast(df, horizon=12)
-
     forecast_df = result.forecast.df
-
     print("\nForecast Results (last 15 rows):")
-
     print(
         forecast_df[["ts", "y", "forecast", "forecast_lower", "forecast_upper"]].tail(
             15
@@ -324,7 +298,6 @@ def visualize_forecast() -> None:
 
 def metadata() -> None:
     regressor_cols = [col for col in df.columns if col not in ["ts", "y"]]
-
     if regressor_cols:
         print(f"Found regressors: {regressor_cols}")
         result_advanced = advanced_forecast(
@@ -335,11 +308,8 @@ def metadata() -> None:
         result_advanced = advanced_forecast(df, horizon=12, regressor_cols=None)
 
     forecast_advanced_df = result_advanced.forecast.df
-
     print("\nAdvanced Forecast Results (future periods):")
-
     future_only = forecast_advanced_df[forecast_advanced_df["y"].isna()]
-
     print(future_only[["ts", "forecast", "forecast_lower", "forecast_upper"]].head(12))
 
 
@@ -350,29 +320,23 @@ def plot_advanced_forecast() -> None:
 
 
 def get_historical_data_where_actual_values_exist() -> None:
-    metrics = evaluate_forecast(forecast_advanced_df)
+    evaluate_forecast(forecast_advanced_df)
 
 
 def get_model_summary() -> None:
     print("=" * 60)
-
     print("MODEL COMPONENTS SUMMARY")
-
     print("=" * 60)
-
     try:
         backtest = result_advanced.backtest
         print("\nBacktest results available")
         print(backtest.test_evaluation)
-    except:
+    except Exception:
         print("\nBacktest not performed (use evaluation_period_param to enable)")
 
     model = result_advanced.model[-1]
-
     print("\n✓ Model trained successfully")
-
     print(f"  Model type: {type(model).__name__}")
-
     try:
         fig = result_advanced.forecast.plot_components()
         if fig:

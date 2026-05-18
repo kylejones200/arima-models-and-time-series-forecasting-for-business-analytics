@@ -91,9 +91,7 @@ def test_stationarity(timeseries: pd.Series, title: str = "Time Series") -> bool
     print(f"\n{'=' * 70}")
     print(f"STATIONARITY TEST: {title}")
     print(f"{'=' * 70}")
-
     result = adfuller(timeseries.dropna(), autolag="AIC")
-
     print("\nAugmented Dickey-Fuller Test:")
     print(f"  ADF Statistic: {result[0]:.6f}")
     print(f"  p-value: {result[1]:.6f}")
@@ -118,15 +116,11 @@ def find_differencing_order(
     print(f"\n{'=' * 70}")
     print("DETERMINING DIFFERENCING ORDER (d)")
     print(f"{'=' * 70}\n")
-
     current_series = timeseries.copy()
-
     for d in range(max_d + 1):
         result = adfuller(current_series.dropna(), autolag="AIC")
         p_value = result[1]
-
         print(f"d={d}: p-value = {p_value:.6f}", end="")
-
         if p_value <= 0.05:
             print(" -> STATIONARY")
             print(f"\nRecommended d = {d}")
@@ -147,19 +141,18 @@ def plot_original_vs_differenced(
     show: bool,
 ) -> None:
     fig, axes = plt.subplots(2, 1, figsize=(15, 8))
-
     axes[0].plot(original.index, original.values, linewidth=2, color="blue")
     axes[0].set_title("Original Series", fontsize=14, fontweight="bold")
     axes[0].set_ylabel("Value")
     axes[0].grid(True, alpha=0.3)
-
     axes[1].plot(differenced.index, differenced.values, linewidth=2, color="red")
-    axes[1].set_title(f"Differenced Series (d={d_order})", fontsize=14, fontweight="bold")
+    axes[1].set_title(
+        f"Differenced Series (d={d_order})", fontsize=14, fontweight="bold"
+    )
     axes[1].set_xlabel("Time")
     axes[1].set_ylabel("Differenced Value")
     axes[1].axhline(y=0, color="black", linestyle="--", alpha=0.5)
     axes[1].grid(True, alpha=0.3)
-
     plt.tight_layout()
     finish_figure(show)
 
@@ -173,17 +166,13 @@ def plot_acf_pacf(timeseries: pd.Series, *, lags: int = 40, show: bool) -> None:
     print("  - ACF cuts off at lag q -> MA(q)")
     print("  - PACF cuts off at lag p -> AR(p)")
     print("  - Both tail off gradually -> ARMA(p,q)\n")
-
     fig, axes = plt.subplots(1, 2, figsize=(15, 5))
-
     plot_acf(timeseries.dropna(), lags=lags, ax=axes[0])
     axes[0].set_title("Autocorrelation Function (ACF)", fontsize=14, fontweight="bold")
-
     plot_pacf(timeseries.dropna(), lags=lags, ax=axes[1])
     axes[1].set_title(
         "Partial Autocorrelation Function (PACF)", fontsize=14, fontweight="bold"
     )
-
     plt.tight_layout()
     finish_figure(show)
 
@@ -198,12 +187,10 @@ def manual_arima_selection(
     print(f"\n{'=' * 70}")
     print("MANUAL ARIMA MODEL SELECTION")
     print(f"{'=' * 70}\n")
-
     best_aic = np.inf
     best_order = None
     best_model = None
     results: list[dict[str, float | int]] = []
-
     for p in p_range:
         for q in q_range:
             try:
@@ -211,7 +198,6 @@ def manual_arima_selection(
                 results.append(
                     {"p": p, "d": d, "q": q, "AIC": fitted.aic, "BIC": fitted.bic}
                 )
-
                 if fitted.aic < best_aic:
                     best_aic = fitted.aic
                     best_order = (p, d, q)
@@ -226,11 +212,9 @@ def manual_arima_selection(
         return None, None
 
     print(f"\nBest model: ARIMA{best_order} with AIC={best_aic:.2f}")
-
     results_df = pd.DataFrame(results).sort_values("AIC").head(5)
     print("\nTop 5 models:")
     print(results_df.to_string(index=False))
-
     return best_model, best_order
 
 
@@ -241,7 +225,6 @@ def automatic_arima_selection(timeseries: pd.Series):
     print(f"{'=' * 70}\n")
     print("Searching for optimal parameters...")
     print("(This may take a minute)\n")
-
     model = auto_arima(
         timeseries,
         start_p=0,
@@ -255,7 +238,6 @@ def automatic_arima_selection(timeseries: pd.Series):
         trace=True,
         error_action="ignore",
     )
-
     print(f"\nBest model: ARIMA{model.order}")
     print(f"  AIC: {model.aic():.2f}")
     print(f"  BIC: {model.bic():.2f}")
@@ -267,11 +249,8 @@ def diagnostic_plots(model, *, title: str = "Model", show: bool) -> None:
     print(f"\n{'=' * 70}")
     print(f"DIAGNOSTIC CHECKING: {title}")
     print(f"{'=' * 70}\n")
-
     residuals = pd.Series(model.resid).dropna()
-
-    fig = plt.figure(figsize=(15, 10))
-
+    plt.figure(figsize=(15, 10))
     ax1 = plt.subplot(2, 2, 1)
     ax1.plot(residuals.values)
     ax1.axhline(y=0, color="r", linestyle="--")
@@ -279,30 +258,24 @@ def diagnostic_plots(model, *, title: str = "Model", show: bool) -> None:
     ax1.set_xlabel("Time")
     ax1.set_ylabel("Residual")
     ax1.grid(True, alpha=0.3)
-
     ax2 = plt.subplot(2, 2, 2)
     ax2.hist(residuals, bins=30, edgecolor="black", alpha=0.7)
     ax2.set_title("Histogram of Residuals", fontweight="bold")
     ax2.grid(True, alpha=0.3)
-
     ax3 = plt.subplot(2, 2, 3)
     sm.qqplot(residuals, line="s", ax=ax3)
     ax3.set_title("Q-Q Plot", fontweight="bold")
     ax3.grid(True, alpha=0.3)
-
     ax4 = plt.subplot(2, 2, 4)
     plot_acf(residuals, lags=40, ax=ax4)
     ax4.set_title("ACF of Residuals", fontweight="bold")
     ax4.grid(True, alpha=0.3)
-
     plt.tight_layout()
     finish_figure(show)
-
     lb_test = acorr_ljungbox(residuals, lags=[10, 20, 30], return_df=True)
     print("\nLjung-Box test for residual autocorrelation:")
     print("(p-value > 0.05 indicates no significant autocorrelation)\n")
     print(lb_test)
-
     print("\nResidual statistics:")
     print(f"  Mean: {residuals.mean():.6f}")
     print(f"  Std Dev: {residuals.std():.4f}")
@@ -322,19 +295,16 @@ def forecast_arima(
     print(f"\n{'=' * 70}")
     print(f"FORECASTING {n_periods} PERIODS AHEAD")
     print(f"{'=' * 70}\n")
-
     forecast, conf_int = model.predict(
         n_periods=n_periods,
         return_conf_int=True,
         alpha=alpha,
     )
-
     last_date = original_data.index[-1]
     freq = original_data.index.freq or pd.infer_freq(original_data.index)
-    forecast_index = pd.date_range(
-        start=last_date, periods=n_periods + 1, freq=freq
-    )[1:]
-
+    forecast_index = pd.date_range(start=last_date, periods=n_periods + 1, freq=freq)[
+        1:
+    ]
     forecast_df = pd.DataFrame(
         {
             "Forecast": forecast,
@@ -343,9 +313,7 @@ def forecast_arima(
         },
         index=forecast_index,
     )
-
     print(forecast_df.head(10))
-
     fig, ax = plt.subplots(figsize=(15, 6))
     ax.plot(
         original_data.index[-100:],
@@ -377,14 +345,12 @@ def forecast_arima(
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     finish_figure(show)
-
     return forecast_df
 
 
 def run_arima_pipeline(args: argparse.Namespace) -> None:
     """Univariate Box-Jenkins workflow on U.S. real GDP."""
     print("Box-Jenkins libraries loaded")
-
     data = load_real_gdp()
     plot_series(
         data.index,
@@ -392,20 +358,16 @@ def run_arima_pipeline(args: argparse.Namespace) -> None:
         title="Original Time Series",
         show=not args.no_show,
     )
-
     test_stationarity(data, "Original Series")
-
     d_order, differenced_data = find_differencing_order(data)
     plot_original_vs_differenced(data, differenced_data, d_order, show=not args.no_show)
     plot_acf_pacf(differenced_data, show=not args.no_show)
-
     manual_arima_selection(
         data,
         p_range=range(4),
         d=d_order,
         q_range=range(4),
     )
-
     if args.skip_auto_arima:
         print("\nSkipping auto_arima (--skip-auto-arima).")
         return
@@ -416,12 +378,10 @@ def run_arima_pipeline(args: argparse.Namespace) -> None:
         title=f"ARIMA{auto_model.order}",
         show=not args.no_show,
     )
-
     print("\n" + "=" * 70)
     print("MODEL SUMMARY")
     print("=" * 70 + "\n")
     print(auto_model.summary())
-
     forecast_arima(
         auto_model,
         data,
@@ -434,7 +394,6 @@ def load_var_data() -> pd.DataFrame:
     """Load or synthesize bivariate data for VAR (Industrial Production, Retail Sales)."""
     start = datetime(2015, 1, 1)
     end = datetime.today()
-
     try:
         from pandas_datareader.data import DataReader
 
@@ -454,7 +413,6 @@ def load_var_data() -> pd.DataFrame:
     time_index = pd.date_range(start="2015-01", periods=100, freq="ME")
     indpro = 50 + np.cumsum(np.random.normal(0, 2, 100))
     rsafs = 30 + 0.5 * indpro + np.random.normal(0, 2, 100)
-
     data_var = pd.DataFrame(
         {"Industrial_Production": indpro, "Retail_Sales": rsafs},
         index=time_index,
@@ -466,27 +424,22 @@ def load_var_data() -> pd.DataFrame:
 def run_var_pipeline(args: argparse.Namespace) -> None:
     """Multivariate VAR: stationarity, Granger causality, fit, diagnostics, forecast."""
     print("VAR libraries loaded")
-
     data_var = load_var_data()
-
     fig, ax = plt.subplots(figsize=(15, 6))
     data_var.plot(ax=ax, linewidth=2)
     ax.set_title("Multivariate Time Series", fontsize=16, fontweight="bold")
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     finish_figure(not args.no_show)
-
     print("\n" + "=" * 70)
     print("STATIONARITY TEST FOR MULTIVARIATE SERIES")
     print("=" * 70 + "\n")
-
     for col in data_var.columns:
         result = adfuller(data_var[col])
         status = "Non-stationary" if result[1] > 0.05 else "Stationary"
         print(f"{col}: p-value = {result[1]:.4f} -> {status}")
 
     data_var_diff = data_var.diff().dropna()
-
     print("\nAfter differencing:")
     for col in data_var_diff.columns:
         result = adfuller(data_var_diff[col])
@@ -499,17 +452,14 @@ def run_var_pipeline(args: argparse.Namespace) -> None:
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     finish_figure(not args.no_show)
-
     col1, col2 = data_var_diff.columns[0], data_var_diff.columns[1]
     print("\n" + "=" * 70)
     print("GRANGER CAUSALITY TEST")
     print("=" * 70)
     print(f"\nTesting if {col2} Granger-causes {col1}:\n")
-
     gc_result = grangercausalitytests(
         data_var_diff[[col1, col2]], maxlag=5, verbose=False
     )
-
     print("Summary of p-values (F-test):")
     for lag in range(1, 6):
         p_value = gc_result[lag][0]["ssr_ftest"][1]
@@ -523,23 +473,18 @@ def run_var_pipeline(args: argparse.Namespace) -> None:
     print("\n" + "=" * 70)
     print("VAR MODEL ESTIMATION")
     print("=" * 70 + "\n")
-
     model_var = VAR(data_var_diff)
     lag_order = model_var.select_order(maxlags=15)
     print("Lag order selection criteria:")
     print(lag_order.summary())
-
     fitted_var = model_var.fit(lag_order.aic)
     print(f"\nFitted VAR({lag_order.aic}) model")
     print(fitted_var.summary())
-
     print("\n" + "=" * 70)
     print("VAR MODEL DIAGNOSTICS")
     print("=" * 70 + "\n")
-
     residuals_var = fitted_var.resid
     fig, axes = plt.subplots(len(data_var_diff.columns), 1, figsize=(15, 8))
-
     for i, col in enumerate(residuals_var.columns):
         axes[i].plot(residuals_var.index, residuals_var[col], linewidth=1)
         axes[i].axhline(y=0, color="r", linestyle="--", alpha=0.5)
@@ -549,7 +494,6 @@ def run_var_pipeline(args: argparse.Namespace) -> None:
     axes[-1].set_xlabel("Time")
     plt.tight_layout()
     finish_figure(not args.no_show)
-
     print("\nDurbin-Watson test (should be close to 2):")
     for col in residuals_var.columns:
         print(f"  {col}: {durbin_watson(residuals_var[col]):.2f}")
@@ -557,32 +501,25 @@ def run_var_pipeline(args: argparse.Namespace) -> None:
     print("\n" + "=" * 70)
     print("VAR FORECASTING")
     print("=" * 70 + "\n")
-
     n_forecast = args.forecast_periods
     forecast_var = fitted_var.forecast(
         data_var_diff.values[-lag_order.aic :],
         steps=n_forecast,
     )
-
     forecast_index = pd.date_range(
         start=data_var.index[-1],
         periods=n_forecast + 1,
         freq=data_var.index.freq or "ME",
     )[1:]
-
     forecast_var_df = pd.DataFrame(
         forecast_var,
         index=forecast_index,
         columns=data_var.columns,
     )
     forecast_actual = forecast_var_df.cumsum() + data_var.iloc[-1]
-
     print("Forecast (first 10 periods):")
     print(forecast_actual.head(10))
-
-    fig, axes = plt.subplots(
-        len(data_var.columns), 1, figsize=(15, 10), sharex=True
-    )
+    fig, axes = plt.subplots(len(data_var.columns), 1, figsize=(15, 10), sharex=True)
     for i, col in enumerate(data_var.columns):
         axes[i].plot(
             data_var.index[-100:],
@@ -616,7 +553,6 @@ def main() -> None:
         matplotlib.use("Agg")
 
     run_arima_pipeline(args)
-
     if not args.skip_var:
         run_var_pipeline(args)
 
