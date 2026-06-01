@@ -1,0 +1,9 @@
+[package]
+name = "arima_models_and_time_series_forecasting_for_business_analytics_core"
+description = "Multivariate lag feature matrix"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+path = "src/lib.rs"

@@ -11,14 +11,7 @@ One of the most widely used and powerful time series modeling techniques is the 
 
 <figcaption>Example of an ARIMA model applied to a Time Series. Source: Author.</figcaption>
 
-## About
 
-Place the code for this article in this repository.
-The original article export is saved as `article.md`.
-
-## Files
-
-Add your `.ipynb`, `.py`, `.yaml`, `.js`, `.ts`, or other project files here.
 
 ## Disclaimer
 

@@ -1,0 +1,13 @@
+[package]
+name = "arima_models_and_time_series_forecasting_for_business_analytics_bench"
+description = "Standalone Rust benchmark (no Python)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "bench"
+path = "src/main.rs"
+
+[dependencies]
+arima_models_and_time_series_forecasting_for_business_analytics_core = { path = "../core" }

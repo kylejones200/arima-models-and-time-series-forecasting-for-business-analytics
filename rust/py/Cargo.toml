@@ -1,0 +1,15 @@
+[package]
+name = "arima_models_and_time_series_forecasting_for_business_analytics_rs"
+description = "Python bindings (PyO3) for arima_models_and_time_series_forecasting_for_business_analytics_core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "arima_models_and_time_series_forecasting_for_business_analytics_rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+arima_models_and_time_series_forecasting_for_business_analytics_core = { path = "../core" }
+pyo3 = { version = "0.28", features = ["extension-module"] }
+numpy = "0.28"
